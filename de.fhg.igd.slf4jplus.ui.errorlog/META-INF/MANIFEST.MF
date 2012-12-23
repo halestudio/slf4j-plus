@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Logs status events to the eclipse error log
+Bundle-SymbolicName: de.fhg.igd.slf4jplus.ui.errorlog
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Fraunhofer IGD
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.ui;bundle-version="3.5.0",
+ org.eclipse.core.runtime;bundle-version="3.5.0"
+Import-Package: ch.qos.logback.classic,
+ ch.qos.logback.classic.spi,
+ ch.qos.logback.core.spi;version="0.9.19",
+ de.fhg.igd.slf4jplus,
+ de.fhg.igd.slf4jplus.logback,
+ de.fhg.igd.slf4jplus.logback.observer,
+ org.slf4j;version="1.5.11"
+Bundle-Activator: de.fhg.igd.slf4jplus.ui.errorlog.Activator

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.fhg.igd</groupId>
+  <artifactId>slf4jplus</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <!--
+  	Great resource:
+  	http://wiki.eclipse.org/Tycho/Reference_Card 
+   -->
+  
+  <modules>
+    <module>de.fhg.igd.slf4jplus.ui.errorlog</module>
+    <module>de.fhg.igd.slf4jplus.ui.userstatus</module>
+    <module>de.fhg.igd.slf4jplus</module>
+    <module>de.fhg.igd.slf4jplus.logback</module>
+    <module>de.fhg.igd.slf4jplus.logback.appender</module>
+    <module>de.fhg.igd.slf4jplus.logback.observer</module>
+    
+    <module>de.fhg.igd.slf4jplus.feature</module>
+    <module>de.fhg.igd.slf4jplus.ui.feature</module>
+    <module>de.fhg.igd.slf4jplus.site</module>
+  </modules>
+  
+  <repositories>
+  	<repository>
+  		<id>eclipse-indigo</id>
+  		<layout>p2</layout>
+  		<url>http://download.eclipse.org/eclipse/updates/3.7</url>
+  	</repository>
+    <!-- repository>
+      <id>indigo</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/releases/indigo</url>
+    </repository -->
+    <repository>
+    	<id>cs3d-platform</id>
+  		<layout>p2</layout>
+    	<url>http://www.cityserver3d.de/updates2/aee53e703488a6ccffdbbe4c027b6cc48b19f59a/platform</url>
+    </repository>
+  </repositories>
+  
+  <properties>
+      <tycho-version>0.16.0</tycho-version>
+      <tycho-extras-version>0.16.0</tycho-extras-version>
+   </properties>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
+      </plugin>
+      <!-- Generate source bundles -->
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <executions>
+          <execution>
+            <id>plugin-source</id>
+            <goals>
+              <goal>plugin-source</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

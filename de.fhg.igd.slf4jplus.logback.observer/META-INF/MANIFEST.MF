@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Basic Observer implementations
+Bundle-SymbolicName: de.fhg.igd.slf4jplus.logback.observer
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Fraunhofer IGD
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: de.fhg.igd.slf4jplus.logback.observer
+Import-Package: ch.qos.logback.classic.spi,
+ ch.qos.logback.core.spi;version="0.9.19",
+ de.fhg.igd.slf4jplus,
+ de.fhg.igd.slf4jplus.logback,
+ org.slf4j;version="1.5.11"

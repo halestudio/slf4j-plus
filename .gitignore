@@ -1,4 +1,11 @@
+# Java
 *.class
+
+# Maven
+target
+
+# gedit and co
+*~
 
 # Package Files #
 *.jar

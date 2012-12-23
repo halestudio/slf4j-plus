@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="platform" sequenceNumber="4">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="3.7.2.M20120208-0800"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.7"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="de.cs3d.platform.feature.feature.group" version="1.0.1"/>
+<repository location="http://www.cityserver3d.de/updates2/aee53e703488a6ccffdbbe4c027b6cc48b19f59a/platform"/>
+</location>
+</locations>
+</target>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.trim.status?after=additions">
+         <toolbar
+               id="de.cs3d.ui.util.logging.userstatus">
+            <control
+                  class="de.fhg.igd.slf4jplus.ui.userstatus.UserStatusItem"
+                  id="userStatus">
+            </control>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="de.fhg.igd.slf4jplus.ui.userstatus.preferences.UserStatusPreferences">
+      </initializer>
+   </extension>
+
+</plugin>
