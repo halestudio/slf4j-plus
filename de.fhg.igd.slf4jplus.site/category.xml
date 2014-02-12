@@ -3,6 +3,6 @@
    <description name="SLF4J Plus Update Site">
       SLF4J Plus Advanced Logger and UI Extensions
    </description>
-   <feature url="features/de.fhg.igd.slf4jplus.feature_1.0.0.qualifier.jar" id="de.fhg.igd.slf4jplus.feature" version="1.0.0.qualifier"/>
-   <feature url="features/de.fhg.igd.slf4jplus.ui.feature_1.0.0.qualifier.jar" id="de.fhg.igd.slf4jplus.ui.feature" version="1.0.0.qualifier"/>
+   <feature url="features/de.fhg.igd.slf4jplus.feature_1.2.0.qualifier.jar" id="de.fhg.igd.slf4jplus.feature" version="1.2.0.qualifier"/>
+   <feature url="features/de.fhg.igd.slf4jplus.ui.feature_1.2.0.qualifier.jar" id="de.fhg.igd.slf4jplus.ui.feature" version="1.2.0.qualifier"/>
 </site>

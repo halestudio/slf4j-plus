@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Logback appender for the log service
 Bundle-SymbolicName: de.fhg.igd.slf4jplus.logback.appender
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: Fraunhofer IGD
-Fragment-Host: ch.qos.logback.classic;bundle-version="0.9.19"
+Fragment-Host: ch.qos.logback.classic;bundle-version="1.0.13"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: ch.qos.logback.core,
+Import-Package: ch.qos.logback.core;version="1.0.13",
  de.fhg.igd.slf4jplus,
  de.fhg.igd.slf4jplus.logback,
  org.osgi.framework;version="1.4.0"

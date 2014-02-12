@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.igd</groupId>
   <artifactId>slf4jplus</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <!--
@@ -39,7 +39,7 @@
     <repository>
     	<id>cs3d-platform</id>
   		<layout>p2</layout>
-    	<url>http://www.cityserver3d.de/updates2/aee53e703488a6ccffdbbe4c027b6cc48b19f59a/platform</url>
+    	<url>http://www.cityserver3d.de/updates2/be4a88f7800e4e13f3ec8fb4148ec8b8d756dfc7/platform/updatesite</url>
     </repository>
   </repositories>
   

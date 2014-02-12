@@ -2,16 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Status line item for user log messages
 Bundle-SymbolicName: de.fhg.igd.slf4jplus.ui.userstatus;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: Fraunhofer IGD
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.ui;bundle-version="3.5.0",
  org.eclipse.core.runtime;bundle-version="3.5.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.fhg.igd.slf4jplus.ui.userstatus.UserStatusBundle
-Import-Package: ch.qos.logback.classic;version="0.9.19",
- ch.qos.logback.classic.spi;version="0.9.19",
+Import-Package: ch.qos.logback.classic;version="1.0.13",
+ ch.qos.logback.classic.spi;version="1.0.13",
  de.fhg.igd.slf4jplus,
  de.fhg.igd.slf4jplus.logback,
  de.fhg.igd.slf4jplus.logback.observer,
- org.slf4j;version="1.5.11"
+ org.slf4j;version="1.7.0"
