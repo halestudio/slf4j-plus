@@ -500,7 +500,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void debug(String format, Object arg1, Object arg2) {
-		String msg = MessageFormatter.format(format, arg1, arg2).toString();
+		String msg = MessageFormatter.format(format, arg1, arg2).getMessage();
 		log(createMarker(false, null), fqcn, DEBUG_INT, msg, null, null);
 	}
 
@@ -509,7 +509,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void debug(String format, Object arg1) {
-		String msg = MessageFormatter.format(format, arg1).toString();
+		String msg = MessageFormatter.format(format, arg1).getMessage();
 		log(createMarker(false, null), fqcn, DEBUG_INT, msg, null, null);
 	}
 
@@ -526,7 +526,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void error(String format, Object arg1, Object arg2) {
-		String msg = MessageFormatter.format(format, arg1, arg2).toString();
+		String msg = MessageFormatter.format(format, arg1, arg2).getMessage();
 		log(createMarker(false, null), fqcn, ERROR_INT, msg, null, null);
 	}
 
@@ -535,7 +535,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void error(String format, Object arg1) {
-		String msg = MessageFormatter.format(format, arg1).toString();
+		String msg = MessageFormatter.format(format, arg1).getMessage();
 		log(createMarker(false, null), fqcn, ERROR_INT, msg, null, null);
 	}
 
@@ -552,7 +552,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void info(String format, Object arg1, Object arg2) {
-		String msg = MessageFormatter.format(format, arg1, arg2).toString();
+		String msg = MessageFormatter.format(format, arg1, arg2).getMessage();
 		log(createMarker(false, null), fqcn, INFO_INT, msg, null, null);
 	}
 
@@ -561,7 +561,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void info(String format, Object arg1) {
-		String msg = MessageFormatter.format(format, arg1).toString();
+		String msg = MessageFormatter.format(format, arg1).getMessage();
 		log(createMarker(false, null), fqcn, INFO_INT, msg, null, null);
 	}
 
@@ -578,7 +578,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void trace(String format, Object arg1, Object arg2) {
-		String msg = MessageFormatter.format(format, arg1, arg2).toString();
+		String msg = MessageFormatter.format(format, arg1, arg2).getMessage();
 		log(createMarker(false, null), fqcn, TRACE_INT, msg, null, null);
 	}
 
@@ -587,7 +587,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void trace(String format, Object arg1) {
-		String msg = MessageFormatter.format(format, arg1).toString();
+		String msg = MessageFormatter.format(format, arg1).getMessage();
 		log(createMarker(false, null), fqcn, TRACE_INT, msg, null, null);
 	}
 
@@ -604,7 +604,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void warn(String format, Object arg1, Object arg2) {
-		String msg = MessageFormatter.format(format, arg1, arg2).toString();
+		String msg = MessageFormatter.format(format, arg1, arg2).getMessage();
 		log(createMarker(false, null), fqcn, WARN_INT, msg, null, null);
 	}
 
@@ -613,7 +613,7 @@ public class ALoggerImpl extends LoggerWrapper implements ALogger, LocationAware
 	 */
 	@Override
 	public void warn(String format, Object arg1) {
-		String msg = MessageFormatter.format(format, arg1).toString();
+		String msg = MessageFormatter.format(format, arg1).getMessage();
 		log(createMarker(false, null), fqcn, WARN_INT, msg, null, null);
 	}
 
