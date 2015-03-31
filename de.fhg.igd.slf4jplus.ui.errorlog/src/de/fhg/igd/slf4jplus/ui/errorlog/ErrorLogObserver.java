@@ -189,19 +189,19 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 			AtomicInteger warnCount, AtomicInteger errorCount) {
 		int sev = child.getSeverity();
 		if (sev < IStatus.WARNING) {
-			if (infos.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX) {
+			if (infos.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX || child.isMultiStatus()) {
 				infos.add(child);
 			}
 			infoCount.incrementAndGet();
 		}
 		else if (sev < IStatus.ERROR) {
-			if (warnings.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX) {
+			if (warnings.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX || child.isMultiStatus()) {
 				warnings.add(child);
 			}
 			warnCount.incrementAndGet();
 		}
 		else {
-			if (errors.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX) {
+			if (errors.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX || child.isMultiStatus()) {
 				errors.add(child);
 			}
 			errorCount.incrementAndGet();
