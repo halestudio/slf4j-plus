@@ -22,7 +22,9 @@
 package de.fhg.igd.slf4jplus.ui.errorlog;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,6 +47,8 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 
 	private static final int MULTI_STATUS_AGGREGATE_THRESHOLD = 200;
 	private static final int MULTI_STATUS_AGGREGATE_GROUP_MAX = 100;
+	
+	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 
 	/**
 	 * @see GroupAwareLogObserver#acceptRawEvent(ch.qos.logback.classic.spi.LoggingEvent)
@@ -60,7 +64,7 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 	 */
 	@Override
 	protected void processEvent(LoggingEvent event) {
-		IStatus status = createStatus(event, false);
+		IStatus status = createStatus(event, false, false);
 		if (status != null) {
 			Activator.getDefault().getLog().log(status);
 		}
@@ -71,7 +75,7 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 	 */
 	@Override
 	protected void processEvents(EventGroup events) {
-		IStatus status = createStatus(events);
+		IStatus status = createStatus(events, false);
 		if (status != null) {
 			Activator.getDefault().getLog().log(status);
 		}
@@ -81,12 +85,13 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 	 * Create an {@link IStatus} from the given event group
 	 * 
 	 * @param events the event group
+	 * @param hasParent if the event item has a parent
 	 * 
 	 * @return the {@link IStatus} or <code>null</code>
 	 */
-	private IStatus createStatus(EventGroup events) {
+	private IStatus createStatus(EventGroup events, boolean hasParent) {
 		if (events.hasChildren()) {
-			CustomMultiStatus status = (CustomMultiStatus) createStatus(events.getEvent(), true);
+			CustomMultiStatus status = (CustomMultiStatus) createStatus(events.getEvent(), true, hasParent);
 			List<IStatus> children = new ArrayList<IStatus>(MULTI_STATUS_AGGREGATE_THRESHOLD);
 			List<IStatus> infos = null;
 			List<IStatus> warnings = null;
@@ -96,7 +101,7 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 			AtomicInteger errorCount = null;
 			boolean aggregate = false;
 			for (EventGroup child : events.getChildren()) {
-				IStatus childStatus = createStatus(child);
+				IStatus childStatus = createStatus(child, true);
 				if (childStatus != null) {
 					if (!aggregate) {
 						if (children.size() < MULTI_STATUS_AGGREGATE_THRESHOLD) {
@@ -180,7 +185,7 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 			return status;
 		}
 		else {
-			return createStatus(events.getEvent(), false);
+			return createStatus(events.getEvent(), false, hasParent);
 		}
 	}
 
@@ -213,10 +218,11 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 	 * 
 	 * @param event the logging event
 	 * @param multi if a {@link CustomMultiStatus} shall be created
+	 * @param hasParent if the status has a parent
 	 * 
 	 * @return the {@link IStatus} or <code>null</code>
 	 */
-	private IStatus createStatus(LoggingEvent event, boolean multi) {
+	private IStatus createStatus(LoggingEvent event, boolean multi, boolean hasParent) {
 		// pluginId
 		String pluginId = ALoggerUtil.getBundleName(event.getMarker());
 		if (pluginId == null) {
@@ -240,13 +246,21 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 			throwable = null;
 		}
 		
+		String message = event.getFormattedMessage();
+		if (hasParent) {
+			// include time in message
+			// (as it gets lost in MultiStatus)
+			Date date = new Date(event.getTimeStamp());
+			message = "[" + TIME_FORMAT.format(date) + "] " + message;
+		}
+		
 		// create status object
 		IStatus status;
 		if (multi) {
 			status = new CustomMultiStatus(
 					pluginId,
 					IStatus.OK,
-					event.getFormattedMessage(), 
+					message, 
 					throwable);
 		}
 		else {
@@ -272,7 +286,7 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 			status = new Status(
 					severity, 
 					pluginId, 
-					event.getFormattedMessage(), 
+					message, 
 					throwable);
 		}
 		
