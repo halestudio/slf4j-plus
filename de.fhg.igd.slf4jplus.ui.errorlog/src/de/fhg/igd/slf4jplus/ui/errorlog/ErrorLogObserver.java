@@ -21,8 +21,12 @@
 
 package de.fhg.igd.slf4jplus.ui.errorlog;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 
 import ch.qos.logback.classic.Level;
@@ -38,6 +42,9 @@ import de.fhg.igd.slf4jplus.logback.observer.GroupAwareLogObserver;
  * @author Simon Templer
  */
 public class ErrorLogObserver extends GroupAwareLogObserver {
+
+	private static final int MULTI_STATUS_AGGREGATE_THRESHOLD = 200;
+	private static final int MULTI_STATUS_AGGREGATE_GROUP_MAX = 100;
 
 	/**
 	 * @see GroupAwareLogObserver#acceptRawEvent(ch.qos.logback.classic.spi.LoggingEvent)
@@ -79,13 +86,97 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 	 */
 	private IStatus createStatus(EventGroup events) {
 		if (events.hasChildren()) {
-			MultiStatus status = (MultiStatus) createStatus(events.getEvent(), true);
+			CustomMultiStatus status = (CustomMultiStatus) createStatus(events.getEvent(), true);
+			List<IStatus> children = new ArrayList<IStatus>(MULTI_STATUS_AGGREGATE_THRESHOLD);
+			List<IStatus> infos = null;
+			List<IStatus> warnings = null;
+			List<IStatus> errors = null;
+			AtomicInteger infoCount = null;
+			AtomicInteger warnCount = null;
+			AtomicInteger errorCount = null;
+			boolean aggregate = false;
 			for (EventGroup child : events.getChildren()) {
 				IStatus childStatus = createStatus(child);
 				if (childStatus != null) {
-					status.add(childStatus);
+					if (!aggregate) {
+						if (children.size() < MULTI_STATUS_AGGREGATE_THRESHOLD) {
+							// normal mode - just add children for multi-status
+							children.add(childStatus);
+						}
+						else {
+							// switch to aggregate mode
+							//TODO threshold configurable?
+							
+							aggregate = true;
+							
+							// init aggregation lists
+							infos = new ArrayList<IStatus>(MULTI_STATUS_AGGREGATE_GROUP_MAX);
+							warnings = new ArrayList<IStatus>(MULTI_STATUS_AGGREGATE_GROUP_MAX);
+							errors = new ArrayList<IStatus>(MULTI_STATUS_AGGREGATE_GROUP_MAX);
+							infoCount = new AtomicInteger();
+							warnCount = new AtomicInteger();
+							errorCount = new AtomicInteger();
+							
+							// store already created children
+							for (IStatus c : children) {
+								bucketInsert(c, infos, warnings, errors, infoCount, warnCount, errorCount);
+							}
+							// store new child
+							bucketInsert(childStatus, infos, warnings, errors, infoCount, warnCount, errorCount);
+							
+							children.clear();
+						}
+					}
+					else {
+						// aggregate already active
+						
+						// store new child in respective bucket
+						bucketInsert(childStatus, infos, warnings, errors, infoCount, warnCount, errorCount);
+					}
 				}
 			}
+			
+			if (aggregate) {
+				// create group children
+				
+				// error
+				if (errors != null && !errors.isEmpty()) {
+					@SuppressWarnings("null")
+					CustomMultiStatus errorStatus = new CustomMultiStatus(
+							status.getPlugin(), status.getCode(),
+							MessageFormat.format((errors.size() < errorCount.get()) ? ("{0} errors (listing {1})") : ("{0} errors"),
+									errorCount.get(), errors.size()),
+							null);
+					errorStatus.setChildren(errors.toArray(new IStatus[errors.size()]));
+					children.add(errorStatus);
+				}
+				
+				// warn
+				if (warnings != null && !warnings.isEmpty()) {
+					@SuppressWarnings("null")
+					CustomMultiStatus warnStatus = new CustomMultiStatus(
+							status.getPlugin(), status.getCode(),
+							MessageFormat.format((warnings.size() < warnCount.get()) ? ("{0} warnings (listing {1})") : ("{0} warnings"),
+									warnCount.get(), warnings.size()),
+							null);
+					warnStatus.setChildren(warnings.toArray(new IStatus[warnings.size()]));
+					children.add(warnStatus);
+				}
+				
+				// info
+				if (infos != null && !infos.isEmpty()) {
+					@SuppressWarnings("null")
+					CustomMultiStatus infoStatus = new CustomMultiStatus(
+							status.getPlugin(), status.getCode(),
+							MessageFormat.format((infos.size() < infoCount.get()) ? ("{0} information messages (listing {1})") : ("{0} information messages"),
+									infoCount.get(), infos.size()),
+							null);
+					infoStatus.setChildren(infos.toArray(new IStatus[infos.size()]));
+					children.add(infoStatus);
+				}
+			}
+			
+			status.setChildren(children.toArray(new IStatus[children.size()]));
 			return status;
 		}
 		else {
@@ -93,11 +184,35 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 		}
 	}
 
+	private void bucketInsert(IStatus child, List<IStatus> infos,
+			List<IStatus> warnings, List<IStatus> errors, AtomicInteger infoCount,
+			AtomicInteger warnCount, AtomicInteger errorCount) {
+		int sev = child.getSeverity();
+		if (sev < IStatus.WARNING) {
+			if (infos.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX) {
+				infos.add(child);
+			}
+			infoCount.incrementAndGet();
+		}
+		else if (sev < IStatus.ERROR) {
+			if (warnings.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX) {
+				warnings.add(child);
+			}
+			warnCount.incrementAndGet();
+		}
+		else {
+			if (errors.size() < MULTI_STATUS_AGGREGATE_GROUP_MAX) {
+				errors.add(child);
+			}
+			errorCount.incrementAndGet();
+		}
+	}
+
 	/**
 	 * Create an {@link IStatus} from the given event
 	 * 
 	 * @param event the logging event
-	 * @param multi if a {@link MultiStatus} shall be created
+	 * @param multi if a {@link CustomMultiStatus} shall be created
 	 * 
 	 * @return the {@link IStatus} or <code>null</code>
 	 */
@@ -128,7 +243,7 @@ public class ErrorLogObserver extends GroupAwareLogObserver {
 		// create status object
 		IStatus status;
 		if (multi) {
-			status = new MultiStatus(
+			status = new CustomMultiStatus(
 					pluginId,
 					IStatus.OK,
 					event.getFormattedMessage(), 
